@@ -49,6 +49,22 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(TaskCreationException.class)
+    public ResponseEntity<ApiError> handleTaskCreationFailure(
+            TaskCreationException ex, HttpServletRequest request) {
+
+        log.warn("Transaction rolled back at {}: {}", request.getRequestURI(), ex.getMessage());
+
+        ApiError error = new ApiError(
+                Instant.now(), 409, "Transaction Rolled Back", "TXN_001",
+                ex.getMessage(),
+                request.getRequestURI(),
+                MDC.get("traceId"), null
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAll(
             Exception ex, HttpServletRequest request) {

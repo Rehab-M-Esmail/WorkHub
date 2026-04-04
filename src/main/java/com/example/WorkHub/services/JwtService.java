@@ -3,7 +3,7 @@ package com.example.WorkHub.services;
 import com.example.WorkHub.models.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
+
 import io.jsonwebtoken.security.Keys;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
