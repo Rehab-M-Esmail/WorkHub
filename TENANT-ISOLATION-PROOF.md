@@ -15,6 +15,7 @@ public class TenantContext {
 ```
 
 **Expected Result:**
+
 - Each request thread holds its own isolated tenant ID.
 - No tenant ID leaks between concurrent requests.
 
@@ -45,6 +46,7 @@ public abstract class TenantAwareEntity {
 ```
 
 **Expected Result:**
+
 - Every entity that extends this class gets a tenant_id column in the database.
 - On insert, tenant_id is automatically populated from TenantContext, no manual setting required.
 - @FilterDef is declared once here and shared by all child entities.
@@ -78,11 +80,12 @@ public class Project extends TenantAwareEntity {
 ```
 
 **Expected Result:**
+
 - When the Hibernate filter is active, all SELECT queries on this entity automatically append WHERE tenant_id = ?
 
 ---
 
-## Step 4 — Create TenantFilter 
+## Step 4 — Create TenantFilter
 
 Intercept every HTTP request, extract the tenant ID from the header, and store it in TenantContext
 
@@ -120,13 +123,14 @@ public class TenantFilter implements Filter {
         try {
             chain.doFilter(req, res);
         } finally {
-            TenantContext.clear(); 
+            TenantContext.clear();
         }
     }
 }
 ```
 
 **Expected Result:**
+
 - Requests without X-Tenant-ID header receive 400 Bad Request.
 - Requests with a non-numeric tenant ID receive 400 Bad Request.
 - Valid requests have their tenant ID stored in TenantContext for the duration of the request.
@@ -134,19 +138,32 @@ public class TenantFilter implements Filter {
 
 ---
 
-
-
 ## Evidence from Postman
-![img_2.png](screenshots/img_2.png)
-![img_1.png](screenshots/img_1.png)
-In the above two screenshots, two tenants have been created in the system ZewailCity and School
+
+### Step 1 — Tenant Creation
+
+Two tenants have been created in the system: **ZewailCity** and **School**.
+
+![ZewailCity tenant](screenshots/img_2.png)
+![School tenant](screenshots/img_1.png)
+
 ---
-![img_3.png](screenshots/img_3.png)
-Zewail project is added for the ZewailCity tenant, where X-Tenant-ID=1
+
+### Step 2 — Adding Projects
+
+**ZewailCity** tenant (`X-Tenant-ID: 1`) — Zewail project added:
+
+![Zewail project](screenshots/img_3.png)
+
+**School** tenant (`X-Tenant-ID: 2`) — School project added:
+
+![School project](screenshots/img_4.png)
+
 ---
-![img_4.png](screenshots/img_4.png)
-School project is added for School, where the X-Tenant-ID=2
----
-![img_5.png](screenshots/img_5.png)
-![img_6.png](screenshots/img_6.png)
-The above screenshots showcase successful tenant isolation, where tenant 1's project are not accessible to tenant 2 and vice versa.
+
+### Step 3 — Tenant Isolation Verified
+
+Tenant 1's projects are not accessible to Tenant 2, and vice versa:
+
+![Isolation proof - Tenant 1](screenshots/img_5.png)
+![Isolation proof - Tenant 2](screenshots/img_6.png)
