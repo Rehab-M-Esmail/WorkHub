@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 public class Tenant {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
     @Setter

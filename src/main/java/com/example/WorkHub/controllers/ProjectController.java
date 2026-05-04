@@ -67,17 +67,16 @@ public class ProjectController {
     }
 
     @Operation(
-            summary = "List projects by tenant",
-            description = "Returns all projects (with their tasks) belonging to a tenant.",
+            summary = "List projects for current tenant",
+            description = "Returns all projects (with their tasks) belonging to the authenticated tenant. Tenant is resolved automatically from the X-Tenant-ID header.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Projects listed"),
-                    @ApiResponse(responseCode = "404", description = "Tenant not found",
+                    @ApiResponse(responseCode = "400", description = "Missing tenant ID",
                             content = @Content(schema = @Schema(implementation = ApiError.class)))
             }
     )
-    @GetMapping("/tenant/{tenantId}")
-    public ResponseEntity<List<ProjectWithTaskResponse>> getProjectsByTenant(
-            @PathVariable Long tenantId) {
-        return ResponseEntity.ok(projectService.getProjectsByTenant(tenantId));
+    @GetMapping("/tenant")
+    public ResponseEntity<List<ProjectWithTaskResponse>> getProjectsByTenant() {
+        return ResponseEntity.ok(projectService.getProjectsByTenant());
     }
 }

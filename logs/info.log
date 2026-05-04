@@ -545,3 +545,74 @@ Error starting ApplicationContext. To display the condition evaluation report re
 2026-05-04 11:19:48.103 [http-nio-8080-exec-7] INFO  c.e.WorkHub.services.ProjectService [0f06283d-ebd7-4738-911e-48826ca13657] - TX Step 1 COMPLETE — Project 'Project A' persisted with id=1 (not yet committed)
 2026-05-04 11:19:48.105 [http-nio-8080-exec-7] INFO  c.e.WorkHub.services.ProjectService [0f06283d-ebd7-4738-911e-48826ca13657] - TX Step 2 COMPLETE — Task 'Task 1' persisted with id=1 under project id=1
 2026-05-04 11:31:03.401 [http-nio-8080-exec-5] INFO  c.e.W.controllers.AuthController [49abc4b9-7c18-411d-8248-10865510ee02] - Attempting to login user: rehab120@example.com
+2026-05-04 21:57:09.320 [restartedMain] INFO  c.example.WorkHub.WorkHubApplication [] - Starting WorkHubApplication using Java 23.0.1 with PID 8356 (F:\workHub\WorkHub\target\classes started by Shahd in F:\workHub\WorkHub)
+2026-05-04 21:57:09.344 [restartedMain] INFO  c.example.WorkHub.WorkHubApplication [] - No active profile set, falling back to 1 default profile: "default"
+2026-05-04 21:57:09.494 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor [] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-04 21:57:09.494 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor [] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-04 21:57:10.238 [background-preinit] INFO  o.h.validator.internal.util.Version [] - HV000001: Hibernate Validator 9.0.1.Final
+2026-05-04 21:57:12.153 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-04 21:57:12.322 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] - Finished Spring Data repository scanning in 143 ms. Found 6 JPA repository interfaces.
+2026-05-04 21:57:14.346 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer [] - Tomcat initialized with port 8080 (http)
+2026-05-04 21:57:14.376 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol [] - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-04 21:57:14.382 [restartedMain] INFO  o.a.catalina.core.StandardService [] - Starting service [Tomcat]
+2026-05-04 21:57:14.382 [restartedMain] INFO  o.a.catalina.core.StandardEngine [] - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-05-04 21:57:14.534 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer [] - Root WebApplicationContext: initialization completed in 5038 ms
+2026-05-04 21:57:14.877 [restartedMain] INFO  o.a.catalina.core.StandardService [] - Stopping service [Tomcat]
+2026-05-04 21:57:14.920 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger [] - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-05-04 21:58:39.696 [restartedMain] INFO  c.example.WorkHub.WorkHubApplication [] - Starting WorkHubApplication using Java 23.0.1 with PID 8600 (F:\workHub\WorkHub\target\classes started by Shahd in F:\workHub\WorkHub)
+2026-05-04 21:58:39.700 [restartedMain] INFO  c.example.WorkHub.WorkHubApplication [] - No active profile set, falling back to 1 default profile: "default"
+2026-05-04 21:58:39.847 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor [] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-04 21:58:39.847 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor [] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-04 21:58:40.515 [background-preinit] INFO  o.h.validator.internal.util.Version [] - HV000001: Hibernate Validator 9.0.1.Final
+2026-05-04 21:58:41.712 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-04 21:58:41.843 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] - Finished Spring Data repository scanning in 116 ms. Found 6 JPA repository interfaces.
+2026-05-04 21:58:43.186 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer [] - Tomcat initialized with port 8080 (http)
+2026-05-04 21:58:43.206 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol [] - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-04 21:58:43.211 [restartedMain] INFO  o.a.catalina.core.StandardService [] - Starting service [Tomcat]
+2026-05-04 21:58:43.213 [restartedMain] INFO  o.a.catalina.core.StandardEngine [] - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-05-04 21:58:43.336 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer [] - Root WebApplicationContext: initialization completed in 3485 ms
+2026-05-04 21:58:43.673 [restartedMain] INFO  o.a.catalina.core.StandardService [] - Stopping service [Tomcat]
+2026-05-04 21:58:43.702 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger [] - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-05-04 22:00:38.697 [restartedMain] INFO  c.example.WorkHub.WorkHubApplication [] - Starting WorkHubApplication using Java 23.0.1 with PID 17524 (F:\workHub\WorkHub\target\classes started by Shahd in F:\workHub\WorkHub)
+2026-05-04 22:00:38.704 [restartedMain] INFO  c.example.WorkHub.WorkHubApplication [] - No active profile set, falling back to 1 default profile: "default"
+2026-05-04 22:00:38.846 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor [] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-04 22:00:38.846 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor [] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-04 22:00:39.470 [background-preinit] INFO  o.h.validator.internal.util.Version [] - HV000001: Hibernate Validator 9.0.1.Final
+2026-05-04 22:00:40.678 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-04 22:00:40.812 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] - Finished Spring Data repository scanning in 117 ms. Found 6 JPA repository interfaces.
+2026-05-04 22:00:42.075 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer [] - Tomcat initialized with port 8080 (http)
+2026-05-04 22:00:42.097 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol [] - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-04 22:00:42.103 [restartedMain] INFO  o.a.catalina.core.StandardService [] - Starting service [Tomcat]
+2026-05-04 22:00:42.104 [restartedMain] INFO  o.a.catalina.core.StandardEngine [] - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-05-04 22:00:42.221 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer [] - Root WebApplicationContext: initialization completed in 3373 ms
+2026-05-04 22:00:42.696 [restartedMain] INFO  org.hibernate.orm.jpa [] - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-04 22:00:42.831 [restartedMain] INFO  org.hibernate.orm.core [] - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-05-04 22:00:43.870 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo [] - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-04 22:00:43.924 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource [] - HikariPool-1 - Starting...
+2026-05-04 22:00:44.562 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool [] - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3f48354f
+2026-05-04 22:00:44.569 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource [] - HikariPool-1 - Start completed.
+2026-05-04 22:00:44.912 [restartedMain] INFO  o.hibernate.orm.connections.pooling [] - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workhub]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.2
+	Default catalog/schema: workhub/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-04 22:00:46.783 [restartedMain] INFO  org.hibernate.orm.core [] - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-04 22:00:47.629 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean [] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-04 22:00:47.783 [restartedMain] INFO  o.s.d.j.r.q.QueryEnhancerFactories [] - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-04 22:00:48.424 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer [] - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-04 22:00:48.470 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean [] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-04 22:00:48.590 [restartedMain] INFO  o.a.catalina.core.StandardService [] - Stopping service [Tomcat]
+2026-05-04 22:00:48.614 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger [] - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.

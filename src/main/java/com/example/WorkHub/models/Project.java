@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -16,7 +19,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Project {
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
+public class Project extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +28,6 @@ public class Project {
 
     @Column(nullable = false)
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tenant_id", nullable = false)
-    private Tenant tenant;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();

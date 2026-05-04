@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
 
 import java.time.Instant;
 
@@ -12,7 +13,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Task {
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
+public class Task extends TenantAwareEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.example.WorkHub.services;
 
+import com.example.WorkHub.config.multitenancy.TenantContext;
 import com.example.WorkHub.dto.project.CreateProjectWithTaskRequest;
 import com.example.WorkHub.dto.project.ProjectWithTaskResponse;
 import com.example.WorkHub.dto.task.TaskResponse;
@@ -11,6 +12,8 @@ import com.example.WorkHub.models.Tenant;
 import com.example.WorkHub.repository.ProjectRepository;
 import com.example.WorkHub.repository.TaskRepository;
 import com.example.WorkHub.repository.TenantRepository;
+import jakarta.persistence.EntityManager;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,15 +29,21 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
     private final TenantRepository tenantRepository;
+    private final EntityManager entityManager;
 
     public ProjectService(ProjectRepository projectRepository,
                           TaskRepository taskRepository,
-                          TenantRepository tenantRepository) {
+                          TenantRepository tenantRepository, EntityManager entityManager) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.tenantRepository = tenantRepository;
+        this.entityManager = entityManager;
     }
-
+    private void applyTenantFilter() {
+        Session session = entityManager.unwrap(Session.class);
+        session.enableFilter("tenantFilter")
+                .setParameter("tenantId", TenantContext.getTenantId());
+    }
     /**
      * TRANSACTIONAL MULTI-STEP OPERATION
      *
@@ -52,30 +61,21 @@ public class ProjectService {
      */
     @Transactional
     public ProjectWithTaskResponse createProjectWithInitialTask(CreateProjectWithTaskRequest request) {
-
-        // ── Step 0: Resolve the tenant ──────────────────────────────────
-        Tenant tenant = tenantRepository.findById(request.getTenantId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Tenant not found with id: " + request.getTenantId()));
-
+        applyTenantFilter();
         // ── Step 1: Create and persist the Project ──────────────────────
+        // tenant_id is auto-set via @PrePersist from TenantContext
         Project project = new Project();
         project.setName(request.getProjectName());
-        project.setTenant(tenant);
         project = projectRepository.save(project);
         projectRepository.flush();
 
-        log.info("TX Step 1 COMPLETE — Project '{}' persisted with id={} (not yet committed)",
+        log.info("TX Step 1 COMPLETE — Project '{}' persisted with id={}",
                 project.getName(), project.getId());
 
         // ── Rollback trigger (for demonstration only) ───────────────────
         if (request.isSimulateTaskFailure()) {
-            log.warn("TX ROLLBACK TRIGGERED — simulateTaskFailure=true. "
-                    + "Project id={} will be rolled back.", project.getId());
             throw new TaskCreationException(
-                    "Simulated failure during task creation. "
-                    + "The project (id=" + project.getId() + ") has been rolled back — "
-                    + "it will NOT appear in the database.");
+                    "Simulated failure — project id=" + project.getId() + " rolled back.");
         }
 
         // ── Step 2: Create and persist the initial Task ─────────────────
@@ -95,13 +95,14 @@ public class ProjectService {
         return new ProjectWithTaskResponse(
                 project.getId(),
                 project.getName(),
-                tenant.getId(),
+                project.getTenantId(),
                 project.getCreatedAt(),
                 List.of(taskResponse));
     }
 
     @Transactional(readOnly = true)
     public ProjectWithTaskResponse getProjectById(Long projectId) {
+        applyTenantFilter();
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Project not found with id: " + projectId));
@@ -113,18 +114,15 @@ public class ProjectService {
         return new ProjectWithTaskResponse(
                 project.getId(),
                 project.getName(),
-                project.getTenant().getId(),
+                project.getTenantId(),
                 project.getCreatedAt(),
                 taskResponses);
     }
 
     @Transactional(readOnly = true)
-    public List<ProjectWithTaskResponse> getProjectsByTenant(Long tenantId) {
-        if (!tenantRepository.existsById(tenantId)) {
-            throw new ResourceNotFoundException("Tenant not found with id: " + tenantId);
-        }
-
-        return projectRepository.findByTenantId(tenantId).stream()
+    public List<ProjectWithTaskResponse> getProjectsByTenant() {
+        applyTenantFilter();
+        return projectRepository.findAll().stream()
                 .map(project -> {
                     List<TaskResponse> taskResponses = project.getTasks().stream()
                             .map(t -> new TaskResponse(
@@ -133,7 +131,7 @@ public class ProjectService {
                     return new ProjectWithTaskResponse(
                             project.getId(),
                             project.getName(),
-                            project.getTenant().getId(),
+                            project.getTenantId(),
                             project.getCreatedAt(),
                             taskResponses);
                 })

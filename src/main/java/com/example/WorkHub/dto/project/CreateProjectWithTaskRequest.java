@@ -1,5 +1,6 @@
 package com.example.WorkHub.dto.project;
 
+import com.example.WorkHub.config.multitenancy.TenantContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,10 +19,6 @@ public class CreateProjectWithTaskRequest {
     @Schema(description = "Title for the initial task", example = "Setup CI pipeline")
     private String initialTaskTitle;
 
-    @NotNull(message = "Tenant ID is required")
-    @Schema(description = "ID of the tenant that owns this project", example = "1")
-    private Long tenantId;
-
     @Schema(description = "Set to true to simulate a failure after project creation, triggering a full rollback",
             example = "false")
     private boolean simulateTaskFailure;
@@ -32,8 +29,7 @@ public class CreateProjectWithTaskRequest {
     public String getInitialTaskTitle() { return initialTaskTitle; }
     public void setInitialTaskTitle(String initialTaskTitle) { this.initialTaskTitle = initialTaskTitle; }
 
-    public Long getTenantId() { return tenantId; }
-    public void setTenantId(Long tenantId) { this.tenantId = tenantId; }
+    public Long getTenantId() { return TenantContext.getTenantId(); }
 
     public boolean isSimulateTaskFailure() { return simulateTaskFailure; }
     public void setSimulateTaskFailure(boolean simulateTaskFailure) { this.simulateTaskFailure = simulateTaskFailure; }

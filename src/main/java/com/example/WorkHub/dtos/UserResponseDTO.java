@@ -1,4 +1,6 @@
 package com.example.WorkHub.dtos;
 
-public record UserResponseDTO(String email, String role, com.example.WorkHub.models.Tenant tenantName, String token) {
+import com.example.WorkHub.config.multitenancy.TenantContext;
+
+public record UserResponseDTO(String email, String role, String tenantName, String token) {
 }

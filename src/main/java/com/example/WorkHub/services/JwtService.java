@@ -23,9 +23,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(User user){
-        return Jwts.builder().setSubject(user.getEmail()).claim("tenantId", user.getTenant().getId()).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+    public String generateToken(User user, Long tenantId) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("tenantId", tenantId)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public boolean isTokenExpired(String token){
