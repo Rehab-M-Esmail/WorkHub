@@ -14,7 +14,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./cfg/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./cfg/grafana/grafana.ini:/etc/grafana/grafana.ini
 #    env_file:
 #      - ./cfg/grafana/grafana.env

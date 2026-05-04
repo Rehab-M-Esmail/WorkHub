@@ -20,6 +20,7 @@ import java.util.Map;
 @Tag(name = "Authentication", description = "User registration and login")
 public class AuthController {
      AuthService userService;
+     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthController.class);
      public AuthController(AuthService userService){
          this.userService = userService;
      }
@@ -29,6 +30,7 @@ public class AuthController {
     })
     @PostMapping("/signup")
     public UserResponseDTO registerUser(@RequestBody UserRegisterRequestDTO userRegisterRequestDTO){
+        log.info("Attempting to register user: {}", userRegisterRequestDTO.getEmail());
         return this.userService.registerUser(userRegisterRequestDTO);
     }
 
@@ -38,6 +40,7 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> loginUser(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
+        log.info("Attempting to login user: {}", userLoginRequestDTO.getEmail());
         String token = this.userService.loginUser(userLoginRequestDTO);
         return ResponseEntity.ok(Map.of("token", token));
     }
