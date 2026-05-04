@@ -28,3 +28,17 @@ mvn spring-boot:run
 ```
 ## 4. Access The Application
 http://localhost:8080
+
+## Run with Docker (App + Kafka)
+
+This starts:
+- `workhub-app` (Spring Boot API on `http://localhost:8080`)
+- `workhub-redpanda` (Kafka-compatible broker on `localhost:9092`)
+
+```bash
+docker compose up --build
+```
+
+Then open:
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- Health: `http://localhost:8080/actuator/health`
