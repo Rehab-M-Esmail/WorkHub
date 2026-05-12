@@ -12,8 +12,6 @@ env:
   JAVA_VERSION: 21
   IMAGE_NAME: workhub-app
   REGISTRY: ghcr.io
-  IMAGE_TAG: ${{ github.sha }}
-
 jobs:
   test:
     name: Run tests
@@ -59,7 +57,9 @@ jobs:
           context: .
           file: Dockerfile
           push: ${{ env.PUSH_IMAGE == 'true' }}
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Show built image tag
-        run: echo "Built image: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
+        env:
+          FULL_TAG: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        run: echo "Built image $FULL_TAG"
