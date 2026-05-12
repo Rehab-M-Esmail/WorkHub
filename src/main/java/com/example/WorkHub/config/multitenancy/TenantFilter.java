@@ -16,7 +16,7 @@ public class TenantFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException{
         HttpServletRequest request = (HttpServletRequest) req;
         String tenantIdHeader = request.getHeader("X-Tenant-ID");
-        if (request.getRequestURI().startsWith("/tenant")|| request.getRequestURI().startsWith("/user")||request.getRequestURI().startsWith("/swagger-ui") || request.getRequestURI().startsWith("/v3/api-docs")) {
+        if (request.getRequestURI().startsWith("/tenant")|| request.getRequestURI().startsWith("/actuator")|| request.getRequestURI().startsWith("/user")||request.getRequestURI().startsWith("/swagger-ui") || request.getRequestURI().startsWith("/v3/api-docs")) {
             chain.doFilter(req, res);
             return;
         }

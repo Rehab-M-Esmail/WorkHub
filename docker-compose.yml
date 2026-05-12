@@ -1,4 +1,19 @@
 services:
+  postgres:
+    image: postgres:16
+    container_name: workhub-postgres
+    environment:
+      POSTGRES_DB: workhub
+      POSTGRES_USER: workhub
+      POSTGRES_PASSWORD: workhub
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workhub"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   redpanda:
     image: docker.redpanda.com/redpandadata/redpanda:v24.1.7
     container_name: workhub-redpanda
@@ -40,7 +55,30 @@ services:
     depends_on:
       redpanda:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
+      DB_HOST: postgres
+      DB_USERNAME: workhub
+      DB_PASSWORD: workhub
     ports:
       - "8080:8080"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./src/cfg/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/cfg/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./src/cfg/grafana/grafana.ini:/etc/grafana/grafana.ini

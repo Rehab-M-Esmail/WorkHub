@@ -12,3 +12,5 @@
 /target/WorkHub-0.0.1-SNAPSHOT.jar.original
 /target/classes/com/example/WorkHub/WorkHubApplication.class
 /target/test-classes/com/example/WorkHub/WorkHubApplicationTests.class
+/target/classes/com/example/WorkHub/auth/CorrelationIdFilter.class
+/target/classes/logback-spring.xml
