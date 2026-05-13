@@ -12,6 +12,7 @@ env:
   JAVA_VERSION: 21
   IMAGE_NAME: workhub-app
   REGISTRY: ghcr.io
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
   test:
     name: Run tests
