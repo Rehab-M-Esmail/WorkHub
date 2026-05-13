@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Maven tests
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/workhub
+          SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/workhub
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
           # Ensures Hibernate creates the schema on the empty CI database
