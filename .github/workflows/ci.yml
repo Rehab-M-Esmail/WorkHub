@@ -20,7 +20,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: workhub_db
+          POSTGRES_DB: workhub
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
@@ -44,9 +44,11 @@ jobs:
 
       - name: Run Maven tests
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/workhub_db
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/workhub
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
+          # Ensures Hibernate creates the schema on the empty CI database
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
         run: ./mvnw test
   build:
     name: Build Docker image
