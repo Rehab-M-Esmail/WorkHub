@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: springboot-app
+          image: workhub-workhub-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: workhub-secret
+                  key: db-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: workhub-secret
+                  key: db-password
+            - name: MASTER_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/workhub
+            - name: MASTER_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: workhub-secret
+                  key: db-username
+            - name: MASTER_DATASOURCE_PASSWORD        
+              valueFrom:
+                secretKeyRef:
+                  name: workhub-secret
+                  key: db-password
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: redpanda-service:9092
+            - name: AUTH_SECRETKEY
+              valueFrom:
+                secretKeyRef:
+                  name: workhub-secret
+                  key: auth-secret-key
+            - name: SPRING_CONFIG_LOCATION
+              value: /app/config/application.properties
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 5
+            failureThreshold: 5
+      volumes:
+        - name: config-volume
+          configMap:
+            name: springboot-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-service
+spec:
+  type: NodePort
+  selector:
+    app: springboot-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080

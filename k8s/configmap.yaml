@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: springboot-config
+data:
+  application.properties: |
+    spring.application.name=WorkHub
+
+    management.endpoint.prometheus.enabled=true
+    management.endpoint.health.show-details=always
+    management.endpoints.web.exposure.include=health,info,metrics,prometheus
+    management.endpoint.health.probes.enabled=true
+    management.health.livenessstate.enabled=true
+    management.health.readinessstate.enabled=true
+
+    springdoc.api-docs.path=/v3/api-docs
+    springdoc.swagger-ui.path=/swagger-ui.html
+    springdoc.swagger-ui.operations-sorter=method
+    springdoc.swagger-ui.tags-sorter=alpha
+
+    logging.level.org.springframework.transaction=TRACE
+    logging.level.org.springframework.orm.jpa=DEBUG
+    logging.level.com.example.WorkHub.services.ProjectService=DEBUG
+
+    spring.kafka.bootstrap-servers=redpanda-service:9092
+    spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+    spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+    spring.kafka.consumer.group-id=workhub-report-consumers
+    spring.kafka.consumer.auto-offset-reset=earliest
+    spring.kafka.consumer.enable-auto-commit=false
+    spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+    spring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.JsonDeserializer
+    spring.kafka.consumer.properties.spring.json.trusted.packages=com.example.WorkHub.messaging.event
+    spring.kafka.listener.ack-mode=record
+
+    workhub.kafka.topics.report-requested=workhub.report.requested.v1
+    workhub.report.processing-delay-ms=1500
+
+    spring.datasource.url=jdbc:postgresql://postgres-service:5432/workhub
+    spring.datasource.driver-class-name=org.postgresql.Driver
+
+    master.datasource.url=jdbc:postgresql://postgres-service:5432/workhub
+
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.hibernate.ddl-auto=create-drop
+    spring.jpa.show-sql=true
