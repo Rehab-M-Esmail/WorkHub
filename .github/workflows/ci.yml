@@ -52,7 +52,7 @@ jobs:
         run: |
           # Diagnostic: Check if port 5432 is actually listening
           nc -zv localhost 5432 || echo "Postgres port not open yet"
-          ./mvnw test
+          mvn test
   build:
     name: Build Docker image
     needs: test
