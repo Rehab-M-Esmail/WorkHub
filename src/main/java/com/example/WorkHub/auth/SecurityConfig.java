@@ -1,5 +1,7 @@
-package com.example.WorkHub.auth;
+package com.example.WorkHub.auth;//package com.example.WorkHub.auth;
 
+import com.example.WorkHub.auth.CorrelationIdFilter;
+import com.example.WorkHub.auth.JwtAuthFilter;
 import com.example.WorkHub.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +34,16 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/user/**").permitAll()
-//                        .requestMatchers("/tenant/**").permitAll()
-//                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-//                        .anyRequest().permitAll()
-//                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/tenant/**",
+                                "/user/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
                 .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
