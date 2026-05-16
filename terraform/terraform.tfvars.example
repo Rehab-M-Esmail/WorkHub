@@ -1,0 +1,29 @@
+# Copy this file to terraform.tfvars and fill in real values.
+# NEVER commit terraform.tfvars — it contains secrets.
+# Add terraform.tfvars and .terraform/ to .gitignore.
+
+project_name        = "workhub"
+environment         = "dev"
+aws_region          = "us-east-1"
+vpc_cidr            = "10.0.0.0/16"
+
+# EKS
+cluster_name        = "workhub-eks"
+kubernetes_version  = "1.30"
+node_instance_type  = "t3.medium"
+desired_capacity    = 2
+min_capacity        = 1
+max_capacity        = 4
+
+# RDS (PostgreSQL 16 — mirrors docker-compose postgres service)
+postgres_version    = "16"
+db_instance_class   = "db.t3.micro"
+db_name             = "workhubdb"
+db_username         = "workhub_user"       # change this
+db_password         = "REPLACE_ME_STRONG"  # change this — use a secret manager in prod
+
+# MSK (Kafka — replaces Redpanda in docker-compose)
+kafka_version       = "3.5.1"
+msk_cluster_name    = "workhub-msk"
+kafka_instance_type = "kafka.t3.small"
+kafka_storage_gb    = 20

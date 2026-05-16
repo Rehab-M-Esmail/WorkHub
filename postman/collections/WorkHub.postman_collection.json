@@ -4,6 +4,20 @@
     "name": "WorkHub",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": "1"
+    },
+    {
+      "key": "projectId",
+      "value": "1"
+    }
+  ],
   "item": [
     {
       "name": "Add Tenant",
@@ -108,7 +122,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\":\"rehab120@example.com\",\n    \"password\":\"password123\"\n}",
+          "raw": "{\n    \"tenantName\": \"Zewail\",\n    \"email\":\"rehab120@example.com\",\n    \"password\":\"password123\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -135,10 +149,19 @@
       "id": "bf846dad-8793-4ae5-9d2d-7cec02115652",
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "X-Tenant-ID",
+            "value": "{{tenantId}}"
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"projectName\": \"Project A\",\n    \"initialTaskTitle\": \"Task 1\",\n    \"tenantId\": \"1\"\n\n}",
+          "raw": "{\n    \"projectName\": \"Project A\",\n    \"initialTaskTitle\": \"Task 1\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -164,7 +187,28 @@
       "id": "5ce65b3a-83b4-400d-9930-e2266c54dbec",
       "request": {
         "method": "GET",
-        "header": []
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "X-Tenant-ID",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/projects/{{projectId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "projects",
+            "{{projectId}}"
+          ]
+        }
       },
       "response": []
     },
@@ -173,9 +217,18 @@
       "id": "fb20d926-9d96-480f-a146-df95f375140b",
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "X-Tenant-ID",
+            "value": "{{tenantId}}"
+          }
+        ],
         "url": {
-          "raw": "http://localhost:8080/projects/tenant/:tenantId",
+          "raw": "http://localhost:8080/projects/tenant",
           "protocol": "http",
           "host": [
             "localhost"
@@ -183,14 +236,7 @@
           "port": "8080",
           "path": [
             "projects",
-            "tenant",
-            ":tenantId"
-          ],
-          "variable": [
-            {
-              "key": "tenantId",
-              "value": "1"
-            }
+            "tenant"
           ]
         }
       },
