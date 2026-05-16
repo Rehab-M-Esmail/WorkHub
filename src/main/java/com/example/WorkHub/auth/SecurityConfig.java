@@ -1,5 +1,6 @@
 package com.example.WorkHub.auth;
-
+import com.example.WorkHub.config.TenantRateLimitFilter;
+import com.example.WorkHub.config.TenantRateLimitFilter.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final TenantJwtAlignmentFilter tenantJwtAlignmentFilter;
     private final CorrelationIdFilter correlationIdFilter;
+    private final TenantRateLimitFilter tenantRateLimitFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,6 +39,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterAfter(tenantRateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(tenantJwtAlignmentFilter, JwtAuthFilter.class);
