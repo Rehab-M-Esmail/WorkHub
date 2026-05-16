@@ -2,6 +2,7 @@ package com.example.WorkHub.services;
 
 import com.example.WorkHub.dtos.TenantRequestDTO;
 import com.example.WorkHub.dtos.TenantResponseDTO;
+import com.example.WorkHub.exception.ResourceNotFoundException;
 import com.example.WorkHub.models.Tenant;
 import com.example.WorkHub.repository.TenantRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class TenantService {
 
     public Tenant getTenantByName(String name) {
         return this.tenantRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Tenant not found: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found: " + name));
     }
 
     public TenantResponseDTO getTenantById(Long id){

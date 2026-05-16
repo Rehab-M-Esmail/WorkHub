@@ -68,7 +68,7 @@ public class ProjectController {
 
     @Operation(
             summary = "List projects for current tenant",
-            description = "Returns all projects (with their tasks) belonging to the authenticated tenant. Tenant is resolved automatically from the X-Tenant-ID header.",
+            description = "Returns all projects (with their tasks) for the tenant in your JWT. The X-Tenant-ID header must equal the token's tenantId claim (enforced by the API).",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Projects listed"),
                     @ApiResponse(responseCode = "400", description = "Missing tenant ID",
