@@ -1,5 +1,6 @@
 package com.example.WorkHub.auth;
 
+import com.example.WorkHub.config.multitenancy.TenantContext;
 import com.example.WorkHub.models.User;
 import com.example.WorkHub.services.JwtService;
 import jakarta.servlet.FilterChain;
@@ -39,29 +40,47 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String username = jwtService.extractUsername(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            final UserDetails userDetails;
-            try {
-                userDetails = userDetailsService.loadUserByUsername(username);
-            } catch (UsernameNotFoundException e) {
-                filterChain.doFilter(request, response);
-                return;
+        /* TenantFilter skips /actuator (and similar); User lookup still needs a tenant (email is per-tenant). */
+        boolean tenantSetFromJwt = false;
+        if (username != null
+                && SecurityContextHolder.getContext().getAuthentication() == null
+                && TenantContext.getTenantId() == null) {
+            Long jwtTenant = jwtService.extractTenantId(token);
+            if (jwtTenant != null) {
+                TenantContext.setTenantId(jwtTenant);
+                tenantSetFromJwt = true;
             }
-            if (userDetails instanceof User) {
-                User user = (User) userDetails;
-                Long jwtTenant = jwtService.extractTenantId(token);
-                if (jwtTenant == null || !jwtTenant.equals(user.getTenantId())) {
+        }
+
+        try {
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                final UserDetails userDetails;
+                try {
+                    userDetails = userDetailsService.loadUserByUsername(username);
+                } catch (UsernameNotFoundException e) {
                     filterChain.doFilter(request, response);
                     return;
                 }
+                if (userDetails instanceof User) {
+                    User user = (User) userDetails;
+                    Long jwtTenant = jwtService.extractTenantId(token);
+                    if (jwtTenant == null || !jwtTenant.equals(user.getTenantId())) {
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
+                }
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+        } finally {
+            if (tenantSetFromJwt) {
+                TenantContext.clear();
             }
         }
-        filterChain.doFilter(request, response);
     }
 }

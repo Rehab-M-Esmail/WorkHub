@@ -1,6 +1,8 @@
 package com.example.WorkHub.dto.report;
 
 import com.example.WorkHub.models.ReportJobStatus;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
@@ -29,15 +31,17 @@ public class ReportJobResponse {
     private Instant startedAt;
     private Instant completedAt;
 
-    public ReportJobResponse(Long jobId,
-                             String reportType,
-                             Long tenantId,
-                             ReportJobStatus status,
-                             String resultMessage,
-                             String failureReason,
-                             Instant createdAt,
-                             Instant startedAt,
-                             Instant completedAt) {
+    @JsonCreator
+    public ReportJobResponse(
+            @JsonProperty("jobId") Long jobId,
+            @JsonProperty("reportType") String reportType,
+            @JsonProperty("tenantId") Long tenantId,
+            @JsonProperty("status") ReportJobStatus status,
+            @JsonProperty("resultMessage") String resultMessage,
+            @JsonProperty("failureReason") String failureReason,
+            @JsonProperty("createdAt") Instant createdAt,
+            @JsonProperty("startedAt") Instant startedAt,
+            @JsonProperty("completedAt") Instant completedAt) {
         this.jobId = jobId;
         this.reportType = reportType;
         this.tenantId = tenantId;

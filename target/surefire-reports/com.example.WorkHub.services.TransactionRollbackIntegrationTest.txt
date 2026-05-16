@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.WorkHub.services.TransactionRollbackIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s -- in com.example.WorkHub.services.TransactionRollbackIntegrationTest

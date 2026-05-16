@@ -45,15 +45,18 @@ jobs:
 
       - name: Run Maven tests
         env:
+          DB_HOST: 127.0.0.1
           SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/workhub
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
           # Ensures Hibernate creates the schema on the empty CI database
           SPRING_JPA_HIBERNATE_DDL_AUTO: update
+          # Avoid Ryuk networking issues on some Docker / job runner setups (Testcontainers)
+          TESTCONTAINERS_RYUK_DISABLED: "true"
         run: |
           # Diagnostic: Check if port 5432 is actually listening
           nc -zv localhost 5432 || echo "Postgres port not open yet"
-          mvn test
+          ./mvnw -B test
   build:
     name: Build Docker image
     needs: test

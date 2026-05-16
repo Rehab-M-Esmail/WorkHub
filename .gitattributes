@@ -1,0 +1,2 @@
+# Shell scripts must use LF so GitHub Actions (Linux) can execute them.
+mvnw text eol=lf

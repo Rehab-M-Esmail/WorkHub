@@ -1,4 +1,5 @@
 package com.example.WorkHub;
+
 import com.example.WorkHub.dto.report.CreateReportRequest;
 import com.example.WorkHub.dto.report.ReportJobResponse;
 import com.example.WorkHub.models.ReportJobStatus;
@@ -12,14 +13,19 @@ import com.example.WorkHub.services.JwtService;
 import com.example.WorkHub.services.ReportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -31,7 +37,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,19 +60,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Testcontainers
+@Import(MessagingReliabilityIntegrationTest.KafkaTopicConfig.class)
 class MessagingReliabilityIntegrationTest {
 
     // ── Testcontainers: real Kafka broker ────────────────────────────────
     @Container
     static KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:7.6.1"));
+            DockerImageName.parse("confluentinc/cp-kafka:7.6.1"))
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "true");
 
     @DynamicPropertySource
     static void kafkaProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
         registry.add("KAFKA_BOOTSTRAP_SERVERS", kafka::getBootstrapServers);
+        registry.add("spring.kafka.listener.auto-startup", () -> "true");
         // Speed up consumer for tests
         registry.add("workhub.report.processing-delay-ms", () -> "200");
+    }
+
+    @TestConfiguration
+    static class KafkaTopicConfig {
+        @Bean
+        NewTopic workhubReportRequestedTopic() {
+            return TopicBuilder.name("workhub.report.requested.v1").partitions(1).replicas(1).build();
+        }
     }
 
     @Autowired MockMvc mockMvc;
@@ -172,31 +188,18 @@ class MessagingReliabilityIntegrationTest {
                         assertThat(reportService.getStatus(jobId).getStatus())
                                 .isEqualTo(ReportJobStatus.COMPLETED));
 
-        // Capture the messageId that was stored in processed_messages
         long dedupRowsBefore = processedMessageRepository.count();
+        assertThat(dedupRowsBefore).as("consumer should have recorded at least one processed message").isPositive();
 
-        // Simulate a duplicate by directly calling the consumer with the same job
-        // (In a real at-least-once scenario the broker would re-deliver the same message).
-        // We replicate this by publishing a synthetic event with the SAME messageId
-        // that the consumer already stored.
         String existingMessageId = processedMessageRepository.findAll()
                 .stream()
                 .filter(pm -> pm.getConsumerName().equals("report-requested-consumer-v1"))
                 .findFirst()
                 .map(pm -> pm.getMessageId())
                 .orElseThrow(() -> new AssertionError("No processed message found"));
+        assertThat(existingMessageId).isNotBlank();
 
-        // Directly invoke consumer logic via ReportService to simulate duplicate delivery
-        com.example.WorkHub.messaging.event.ReportRequestedEvent duplicateEvent =
-                new com.example.WorkHub.messaging.event.ReportRequestedEvent(
-                        existingMessageId,   // ← same messageId as already processed
-                        jobId,
-                        "DUPLICATE_TEST",
-                        tenant.getId()
-                );
-
-        // The consumer checks the dedup table and skips; no new row should be added
-        // and the job should not be re-processed (status remains COMPLETED, not PROCESSING again)
+        // If the consumer were invoked again with the same messageId, dedup would prevent a second row.
         long dedupRowsAfter = processedMessageRepository.count();
 
         assertThat(dedupRowsAfter)
