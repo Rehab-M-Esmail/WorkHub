@@ -21,3 +21,6 @@
 /terraform/*.tfstate.*
 /terraform/crash.log
 /target/classes/logback-spring.xml
+
+# Local env (keep secrets out of git; use .env.example as template)
+.env

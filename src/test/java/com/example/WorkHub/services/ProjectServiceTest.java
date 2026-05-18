@@ -2,6 +2,7 @@ package com.example.WorkHub.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.config.multitenancy.TenantContext;
 import com.example.WorkHub.dto.project.CreateProjectWithTaskRequest;
 import com.example.WorkHub.models.Tenant;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-class TransactionRollbackIntegrationTest {
+class TransactionRollbackIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired ProjectService projectService;
     @Autowired ProjectRepository projectRepository;

@@ -19,8 +19,8 @@ max_capacity        = 4
 postgres_version    = "16"
 db_instance_class   = "db.t3.micro"
 db_name             = "workhubdb"
-db_username         = "workhub_user"       # change this
-db_password         = "REPLACE_ME_STRONG"  # change this — use a secret manager in prod
+db_username         = "postgres"       
+db_password         = "postgres"  
 
 # MSK (Kafka — replaces Redpanda in docker-compose)
 kafka_version       = "3.5.1"

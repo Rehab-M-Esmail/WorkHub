@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.WorkHub.controllers.TenantControllerTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.87 s -- in com.example.WorkHub.controllers.TenantControllerTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.87 s -- in com.example.WorkHub.controllers.TenantControllerTest

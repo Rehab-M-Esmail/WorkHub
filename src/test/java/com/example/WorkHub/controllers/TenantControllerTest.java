@@ -1,5 +1,6 @@
 package com.example.WorkHub.controllers;
 
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.dtos.TenantRequestDTO;
 import com.example.WorkHub.dtos.TenantResponseDTO;
 import com.example.WorkHub.services.TenantService;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-class TenantControllerTest {
+class TenantControllerTest extends PostgresIntegrationTestBase {
 
     @Autowired
     private MockMvc mockMvc;

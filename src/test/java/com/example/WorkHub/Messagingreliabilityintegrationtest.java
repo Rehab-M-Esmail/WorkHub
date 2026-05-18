@@ -1,5 +1,6 @@
 package com.example.WorkHub;
 
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.dto.report.CreateReportRequest;
 import com.example.WorkHub.dto.report.ReportJobResponse;
 import com.example.WorkHub.models.ReportJobStatus;
@@ -61,7 +62,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Testcontainers
 @Import(MessagingReliabilityIntegrationTest.KafkaTopicConfig.class)
-class MessagingReliabilityIntegrationTest {
+class MessagingReliabilityIntegrationTest extends PostgresIntegrationTestBase {
 
     // ── Testcontainers: real Kafka broker ────────────────────────────────
     @Container

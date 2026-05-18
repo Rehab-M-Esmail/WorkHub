@@ -1,15 +1,16 @@
+# Loads variables from project-root .env (see .env.example).
 services:
   postgres:
     image: postgres:16
     container_name: workhub-postgres
     environment:
-      POSTGRES_DB: workhub
-      POSTGRES_USER: workhub
-      POSTGRES_PASSWORD: workhub
+      POSTGRES_DB: ${POSTGRES_DB:-workhub}
+      POSTGRES_USER: ${POSTGRES_USER:-workhub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-workhub}
     ports:
-      - "5433:5432"
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U workhub"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-workhub} -d ${POSTGRES_DB:-workhub}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -39,8 +40,8 @@ services:
       - --advertise-pandaproxy-addr
       - redpanda:8082
     ports:
-      - "9092:9092"
-      - "9644:9644"
+      - "${KAFKA_HOST_PORT:-9092}:9092"
+      - "${REDPANDA_ADMIN_HOST_PORT:-9644}:9644"
     healthcheck:
       test: ["CMD-SHELL", "rpk cluster health | grep -q 'Healthy:.*true'"]
       interval: 10s
@@ -58,28 +59,40 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
-      DB_HOST: postgres
-      DB_USERNAME: workhub
-      DB_PASSWORD: workhub
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS:-redpanda:9092}
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_USERNAME: ${DB_USERNAME:-workhub}
+      DB_PASSWORD: ${DB_PASSWORD:-workhub}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/workhub}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-workhub}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-workhub}
+      AUTH_SECRETKEY: ${AUTH_SECRETKEY:-WorkHubWorkinghubbbbhfdhfgueusfuherfqwoeierf345vg43tv44vt5463}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
+      WORKHUB_KAFKA_TOPICS_REPORT_REQUESTED: ${WORKHUB_KAFKA_TOPICS_REPORT_REQUESTED:-workhub.report.requested.v1}
+      WORKHUB_REPORT_PROCESSING_DELAY_MS: ${WORKHUB_REPORT_PROCESSING_DELAY_MS:-1500}
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: ${MANAGEMENT_TRACING_SAMPLING_PROBABILITY:-1.0}
+      MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: ${MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT:-http://tempo:4318/v1/traces}
     ports:
-      - "8080:8080"
+      - "${APP_HOST_PORT:-8080}:8080"
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     volumes:
       - ./src/cfg/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    # Host 9091 if 9090 is already taken (common with another Prometheus or tools).
     ports:
-      - "9091:9090"
+      - "${PROMETHEUS_HOST_PORT:-9091}:9090"
 
   grafana:
     image: grafana/grafana
     container_name: grafana
     restart: always
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: ${GF_USERS_ALLOW_SIGN_UP:-false}
     ports:
-      - "3000:3000"
+      - "${GRAFANA_HOST_PORT:-3000}:3000"
     volumes:
       - ./src/cfg/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./src/cfg/grafana/grafana.ini:/etc/grafana/grafana.ini

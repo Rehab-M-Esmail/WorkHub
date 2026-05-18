@@ -1,5 +1,6 @@
 package com.example.WorkHub;
 
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.models.Tenant;
 import com.example.WorkHub.models.User;
 import com.example.WorkHub.repository.TenantRepository;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Transactional
-class ProjectTenantScopeIntegrationTest {
+class ProjectTenantScopeIntegrationTest extends PostgresIntegrationTestBase {
 
     private static final String CREATE_PROJECT_PAYLOAD = """
             {

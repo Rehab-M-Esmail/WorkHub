@@ -1,5 +1,6 @@
 package com.example.WorkHub.services;
 
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.config.multitenancy.TenantContext;
 import com.example.WorkHub.models.*;
 import com.example.WorkHub.repository.*;
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-class ConcurrencySafetyIntegrationTest {
+class ConcurrencySafetyIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired TaskRepository taskRepository;
     @Autowired ProjectRepository projectRepository;

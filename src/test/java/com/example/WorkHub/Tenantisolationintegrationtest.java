@@ -1,5 +1,7 @@
 package com.example.WorkHub;
+
 import com.example.WorkHub.config.multitenancy.TenantContext;
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.models.Project;
 import com.example.WorkHub.models.Task;
 import com.example.WorkHub.models.Tenant;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Transactional          // each test rolls back; DB is clean for the next one
-class TenantIsolationIntegrationTest {
+class TenantIsolationIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper()

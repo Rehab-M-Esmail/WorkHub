@@ -1,5 +1,6 @@
 package com.example.WorkHub.observability;
 
+import com.example.WorkHub.support.PostgresIntegrationTestBase;
 import com.example.WorkHub.models.Tenant;
 import com.example.WorkHub.models.User;
 import com.example.WorkHub.repository.TenantRepository;
@@ -22,7 +23,7 @@ import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-class ObservabilityIntegrationTest {
+class ObservabilityIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private TenantRepository tenantRepository;
